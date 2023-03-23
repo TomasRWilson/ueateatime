@@ -11,7 +11,7 @@ export default function WelcomeEmail(name, token) {
                 <Container style={container}>
                     <Text style={heading}>Hello {name}</Text>
                     <Text style={paragraph}>Welcome to TeaTime! Please click the link below to login.</Text>
-                    <Button href={"http://localhost:3000/logintoken?token="+token} style={{ color: '#acdef2'}}>Log In</Button>
+                    <Button style={button} href={"http://localhost:3000/logintoken?token="+token}>Log In</Button>
                 </Container>
             </Section>
         </Html>
@@ -27,6 +27,7 @@ const container = {
   margin: "0 auto",
   padding: "20px 0 48px",
   width: "580px",
+    backgroundColour: "#e8e8e8"
 };
 
 const heading = {
@@ -40,4 +41,12 @@ const paragraph = {
   fontSize: "18px",
   lineHeight: "1.4",
   color: "#484848",
+};
+
+const button = {
+    fontSize: "20px",
+    lineHeight: '1.6',
+    color: '#acdef2',
+    padding: '20px',
+    borderRadius: '5px',
 };

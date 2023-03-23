@@ -9,7 +9,7 @@ export default async function handler(
 ) {
     await sendEmail({
         to: req.body.email,
-        subject: "Login to TeaTime",
+        subject: "Login to TeaTime with your magic link",
         html: render(WelcomeTemplate(req.body.name, req.body.token)),
     });
 

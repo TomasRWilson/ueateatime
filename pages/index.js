@@ -12,16 +12,36 @@ export default function Home() {
   const [user, setUser] = useContext(UserContext);
   
   function User() { 
-    return <h1>{user}</h1>;
+    return <h2>Current User: {user}</h2>;
   }
 
   function UserNav() {
     return(
       <>
-        <Link href='/login'>Log In</Link>
-        <Link href='/signup'>Sign Up</Link>
+        <Link href='/login'>Log In</Link><br/>
+        <Link href='/signup'>Sign Up</Link><br/>
       </>
     )
+  }
+
+  function Title() {
+      return(
+          <>
+              <h1>Tea Time Blog</h1>
+          </>
+      )
+  }
+
+  function LogOut(){
+      function handleClick() {
+          setUser(null)
+      }
+
+      return(
+          <>
+              <button onClick={handleClick}>Log Out</button>
+          </>
+      )
   }
   return (
     <>
@@ -30,8 +50,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <User />
-        <UserNav />
+          <Title />
+          <User />
+          <UserNav />
+          <LogOut />
       </main>
     </>
   )

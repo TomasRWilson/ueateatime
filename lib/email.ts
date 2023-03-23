@@ -6,17 +6,17 @@ type EmailPayload = {
   html: string
 }
 
-// Replace with your SMTP credentials
+// Store email credentials
 const smtpOptions = {
   host: process.env.SMTP_HOST || "smtp.mailtrap.io",
   port: parseInt(process.env.SMTP_PORT || "2525"),
   secure: false,
   auth: {
     user: process.env.SMTP_USER || "user",
-    pass: process.env.SMTP_PASSWORD || "password",
+    pass: process.env.SMTP_PASSWORD_MAC || "password",
   },
 }
-
+//Send email and await response
 export const sendEmail = async (data: EmailPayload) => {
   const transporter = nodemailer.createTransport({
     ...smtpOptions,

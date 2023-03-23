@@ -7,24 +7,28 @@ import React, { useState } from "react";
 import Link from 'next/link';
 
 export default function Home() {
-
+    //Used to store response for error feedback
     const [resp, setResp] = React.useState();
 
     const router = useRouter()
     
     const handleSubmit = async (event) => {
         event.preventDefault()
+        //Construct data and hash and salt password before it is sent to db
         const data = {
             email: event.target.email.value,
             password: web3.utils.sha3(process.env.HASH_SALT + event.target.pass.value)
         }
+        //Send data to login api
         axios.post('/api/login-user', data)
         .then((response) => {
             console.log(response)
             if(response.data == 205){
+                //Change value of resp to tell user what is wrong
                 setResp(205);
             }
             if(response.data == 200){
+                //Send user to login-wait if email has been sent
                 router.push('/login-wait');
             }
         })
@@ -32,6 +36,7 @@ export default function Home() {
         )}
     
     function Error({ErrorCode}){
+        //Tell user error based on code
         switch(ErrorCode){
             case 205:
                 return(<p style={{ color: 'red' }}>Email or password invalid.</p>)
@@ -40,7 +45,7 @@ export default function Home() {
 
         }
     }
-
+    //Form for login request
     return(
         <>
             <Head>
