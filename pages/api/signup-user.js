@@ -21,8 +21,10 @@ export default async (req, res) => {
         //Construct email information
         const data = {
             email: req.body.email,
+            subject: "Login to TeaTime with your magic link",
             name: req.body.firstname,
-            token: token
+            token: token,
+            type: 'welcome'
         }
         //Send Email
         axios.post('http://localhost:3000/api/send-email', data)

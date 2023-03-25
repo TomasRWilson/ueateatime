@@ -63,7 +63,7 @@ export default function Home() {
                     <input id="lastn" name="lastn" placeholder="Last Name" type="text"></input><br/>
                     <input id="email" name="email" placeholder="Email" type="email"></input><br/>
                     <ErrorEmail ErrorCode={resp}/>
-                    <input id="pass" name="pass" placeholder="Password" type="text"></input><br/>
+                    <input id="pass" name="pass" placeholder="Password" type="password"></input><br/>
                     <button type="submit">Sign Up</button>
                 </form>
             </main>

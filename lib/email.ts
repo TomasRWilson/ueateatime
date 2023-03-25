@@ -13,7 +13,7 @@ const smtpOptions = {
   secure: false,
   auth: {
     user: process.env.SMTP_USER || "user",
-    pass: process.env.SMTP_PASSWORD_MAC || "password",
+    pass: process.env.SMTP_PASSWORD_WINDOWS || "password", 
   },
 }
 //Send email and await response

@@ -55,10 +55,11 @@ export default function Home() {
                 <Link href='/'>Back</Link>
                 <form onSubmit={handleSubmit}>
                     <input id="email" name="email" placeholder="Email" type="email"></input><br/>
-                    <input id="pass" name="pass" placeholder="Password" type="text"></input><br/>
+                    <input id="pass" name="pass" placeholder="Password" type="password"></input><br/>
                     <Error ErrorCode = {resp}/>
                     <button type="submit">Log In</button>
                 </form>
+                <Link href='/forgotpassword'>Forgotten Password?</Link>
             </main>
         </>
     )
