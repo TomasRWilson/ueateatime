@@ -15,6 +15,23 @@ export default function Home() {
 
     const router = useRouter()
     
+    const LinkStyle = {
+        color: "black",
+        textDecoration: "none",
+        fontWeight: "bold",
+        fontSize: "24px",
+        float: "left",
+        margin: "-60px 0 0 40px",
+        display: "block"
+    }
+
+    const FPStyle = {
+        color: "black",
+        textDecoration: "none",
+        display: "inline-block",
+        margin: "30px"
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setFormData({email: "", password: ""});
@@ -56,14 +73,14 @@ export default function Home() {
                 <title>Tea Time Login</title>
             </Head>
             <main>
-                <Link href='/'>Back</Link>
+                <Link href='/' style={LinkStyle}>&lt; Back</Link>
                 <form onSubmit={handleSubmit}>
                     <input id="email" name="email" placeholder="Email" type="email" onChange={(e) => setFormData({...formData, email: e.target.value})} value={formData.email}></input><br/>
                     <input id="pass" name="pass" placeholder="Password" type="password" onChange={(e) => setFormData({...formData, password: e.target.value})} value={formData.password}></input><br/>
                     <Error ErrorCode = {resp}/>
                     <button>Log In</button>
                 </form>
-                <Link href='/forgotpassword'>Forgotten Password?</Link>
+                <Link href='/forgotpassword' style={FPStyle}>Forgotten Password?</Link>
             </main>
         </>
     )

@@ -17,10 +17,21 @@ export default function Home() {
         passwordError: "",
         passwordC: "",
         passwordCError: "",
+        emailError: true,
         clean: false
     });
 
     const router = useRouter();
+
+    const LinkStyle = {
+        color: "black",
+        textDecoration: "none",
+        fontWeight: "bold",
+        fontSize: "24px",
+        float: "left",
+        margin: "-60px 0 0 40px",
+        display: "block"
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -45,6 +56,12 @@ export default function Home() {
     const handleChange = (event) => {
         event.preventDefault();
         setFormData({...formData, [event.target.name]:event.target.value.trim()});
+        if(resp == 205 && event.target.name == "email"){
+            setResp("");
+        }
+        if(resp == 206 && event.target.name == "username"){
+            setResp("");
+        }
         }
 
     const handleValidation = (event) => {
@@ -93,7 +110,7 @@ export default function Home() {
     }
 
     function isClean(){
-        if(formData.username && formData.firstname && formData.lastname && formData.email && formData.password == formData.passwordC && !formData.passwordError && !formData.passwordCError){
+        if(formData.username && formData.firstname && formData.lastname && formData.email && formData.password == formData.passwordC && !formData.passwordError && !formData.passwordCError && !formData.emailError){
             if(!formData.clean){
                 setFormData({...formData, clean: true});
             }
@@ -101,26 +118,19 @@ export default function Home() {
             if(formData.clean){
                 setFormData({...formData, clean: false});
             }
-            
         }
-        console.log(formData);
     }
 
     function ErrorUser({ErrorCode}){
-        let msg = "";
         if(ErrorCode == 206){
-            msg = "Username is unavailable";
+            return(<p className="form-warning">Username is unavailable</p>);
         }
-        return(<p className="form-warning">{msg}</p>);
     };
 
     function ErrorEmail({ErrorCode}){
-        let msg = "";
         if(ErrorCode == 205){
-            msg = "Email is unavailable";
+            return(<p className="form-warning">Email is unavailable</p>);
         }
-        return(<p className="form-warning">{msg}</p>);
-
     };
 
     function PasswordError(){
@@ -135,6 +145,33 @@ export default function Home() {
         )
     }
 
+    function EmptyError(Obj){
+        let msg = "";
+        if(formData.passwordC.length > 1 && !formData.passwordCError){
+            if(Obj.Obj == ""){
+                msg = "Field cannot be empty";
+            }
+        }
+        return(<p className="form-warning">{msg}</p>)
+    }
+
+    function EmailError(){
+        const emailVerif = /\S+@\S+\.\S+/;
+        if(formData.email.length > 0 && !emailVerif.test(formData.email)){
+            if(formData.emailError != "Email must be valid"){
+                setFormData({...formData, emailError: "Email must be valid"});
+            }
+        }else if(formData.passwordC.length > 1 && !formData.passwordCError){
+            if(formData.email == "" && formData.emailError != "Field cannot be empty"){
+                setFormData({...formData, emailError: "Field cannot be empty"});
+            }else{
+                if(emailVerif.test(formData.email) && formData.emailError != ""){
+                    setFormData({...formData, emailError: ""});
+                }
+        }
+        }
+    }
+
     isClean();
 
     return(
@@ -142,13 +179,18 @@ export default function Home() {
             <Head>
                 <title>Tea Time Signup</title>
             </Head>
-            <Link href='/'>Back</Link>
+            <Link href='/' style={LinkStyle}>&lt; Back</Link>
             <form onSubmit={handleSubmit}>
-                <input id="usern" name="username" placeholder="Username" type="text" onChange={handleChange} value={formData.username} required/>
+                <input id="usern" name="username" placeholder="Username" type="text" onChange={handleChange} value={formData.username}/>
+                <EmptyError Obj={formData.username} />
                 <ErrorUser ErrorCode={resp}/>
-                <input id="firstn" name="firstname" placeholder="First Name" type="text" onChange={handleChange} value={formData.firstname} required/>
-                <input id="lastn" name="lastname" placeholder="Last Name" type="text" onChange={handleChange} value={formData.lastname} required/>
-                <input id="email" name="email" placeholder="Email" type="email" onChange={handleChange} value={formData.email} required/>
+                <input id="firstn" name="firstname" placeholder="First Name" type="text" onChange={handleChange} value={formData.firstname}/>
+                <EmptyError Obj={formData.firstname} />
+                <input id="lastn" name="lastname" placeholder="Last Name" type="text" onChange={handleChange} value={formData.lastname}/>
+                <EmailError />
+                <EmptyError Obj={formData.lastname} />
+                <input id="email" name="email" placeholder="Email" type="email" onChange={handleChange} value={formData.email}/>
+                <p className="form-warning">{formData.emailError}</p>
                 <ErrorEmail ErrorCode={resp}/>
                 <input id = "pass" type="password" value={formData.password}  onChange={handleChange} onKeyUp={handleValidation} name="password" placeholder="Password"/>
                 <PasswordError />
