@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import axios from 'axios';
-import React from "react";
+import React,  { useState }  from "react";
 import Link from 'next/link';
 const web3 = require('web3');
 
@@ -8,9 +8,12 @@ const web3 = require('web3');
 
 export default function Home() {
     //Import user context
-    const [resp, setResp] = React.useState();
-    const [user_id, setUser_Id] = React.useState();
-    const [passed, setPassed] = React.useState();
+    const [resp, setResp] = useState("");
+    const [user_id, setUser_Id] = useState("");
+    const [passed, setPassed] = useState(false);
+    const [temp, setTemp] = useState("");
+    const [passInfo, setPassInfo] = useState("");
+
     //Read token from URL paramter
     const router = useRouter();
     const {token} = router.query;
@@ -31,7 +34,8 @@ export default function Home() {
     )
     
     const handleSubmit = async (event) => {
-        event.preventDefault()
+        event.preventDefault();
+        setPassInfo({password: ""});
         //Construct data and hash and salt password before it is sent to db
         const data = {
             token: token,
@@ -65,11 +69,18 @@ export default function Home() {
     }
     //Present form if token if valid
     const PassForm = ({pass}) => {
+
+        
+
+        const handleChange = (event) => {
+            setPassInfo({ ...passInfo, [event.target.name]: event.target.value});
+        }
+
         if (pass){
             return(
                 <>
                     <form onSubmit={handleSubmit}>
-                        <input id="pass" name="pass" placeholder="New Password" type="password"></input><br/>
+                        <input id="pass" name="pass" placeholder="New Password" type="password" value={passInfo} onChange={(e) => setPassInfo(e.target.value)}></input><br/>
                         <button type="submit">Change Password</button>
                     </form>
                 </>

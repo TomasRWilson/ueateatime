@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import styles from 'styles/Home.module.css'
 import { useRouter } from 'next/router'
 import axios from 'axios';
 const web3 = require('web3');
@@ -8,17 +7,39 @@ import Link from 'next/link';
 
 export default function Home() {
     //Used to store response for error feedback
-    const [resp, setResp] = React.useState();
+    const [resp, setResp] = useState();
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    })
 
     const router = useRouter()
     
+    const LinkStyle = {
+        color: "black",
+        textDecoration: "none",
+        fontWeight: "bold",
+        fontSize: "24px",
+        float: "left",
+        margin: "-60px 0 0 40px",
+        display: "block"
+    }
+
+    const FPStyle = {
+        color: "black",
+        textDecoration: "none",
+        display: "inline-block",
+        margin: "30px"
+    }
+
     const handleSubmit = async (event) => {
-        event.preventDefault()
+        event.preventDefault();
+        setFormData({email: "", password: ""});
         //Construct data and hash and salt password before it is sent to db
         const data = {
             email: event.target.email.value,
             password: web3.utils.sha3(process.env.HASH_SALT + event.target.pass.value)
-        }
+        };
         //Send data to login api
         axios.post('/api/login-user', data)
         .then((response) => {
@@ -52,14 +73,14 @@ export default function Home() {
                 <title>Tea Time Login</title>
             </Head>
             <main>
-                <Link href='/'>Back</Link>
+                <Link href='/' style={LinkStyle}>&lt; Back</Link>
                 <form onSubmit={handleSubmit}>
-                    <input id="email" name="email" placeholder="Email" type="email"></input><br/>
-                    <input id="pass" name="pass" placeholder="Password" type="password"></input><br/>
+                    <input id="email" name="email" placeholder="Email" type="email" onChange={(e) => setFormData({...formData, email: e.target.value})} value={formData.email}></input><br/>
+                    <input id="pass" name="pass" placeholder="Password" type="password" onChange={(e) => setFormData({...formData, password: e.target.value})} value={formData.password}></input><br/>
                     <Error ErrorCode = {resp}/>
-                    <button type="submit">Log In</button>
+                    <button>Log In</button>
                 </form>
-                <Link href='/forgotpassword'>Forgotten Password?</Link>
+                <Link href='/forgotpassword' style={FPStyle}>Forgotten Password?</Link>
             </main>
         </>
     )
