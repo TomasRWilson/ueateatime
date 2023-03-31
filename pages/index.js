@@ -9,16 +9,26 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
   const [user, setUser] = useContext(UserContext);
-  
+
+  const LogSignStyle = {
+      color: "white",
+      textDecoration: "none",
+      fontWeight: "bold",
+      fontSize: "20px",
+      margin: "0 10px",
+  }
+
   function User() { 
-    return <h2>Current User: {user}</h2>;
+    return <h2 className="Username">{user.username}</h2>;
   }
 
   function UserNav() {
     return(
       <>
-        <Link href='/login'>Log In</Link><br/>
-        <Link href='/signup'>Sign Up</Link><br/>
+        <ul className="LogSign">
+          <li><Link href='/login' style={LogSignStyle}>Log In</Link></li>
+          <li><Link href='/signup' style={LogSignStyle}>Sign Up</Link></li>
+        </ul>
       </>
     )
   }
@@ -26,7 +36,9 @@ export default function Home() {
   function Title() {
       return(
           <>
+            <div className="Title">
               <h1>Tea Time Blog</h1>
+            </div>
           </>
       )
   }
@@ -37,11 +49,36 @@ export default function Home() {
       }
 
       return(
-          <>
-              <button onClick={handleClick}>Log Out</button>
-          </>
-      )
+      <>
+        <ul className="UserLogout">
+          <li><h2 className="Username">{user.username}</h2></li>
+          <li><button onClick={handleClick} className="LogOut">Log Out</button></li>
+        </ul>
+      </>)
   }
+
+  function TopBar(){
+    if(user){
+      return(
+        <>
+          <div className="TopBar">
+            <Title />
+            <LogOut />
+          </div>
+            
+        </>)
+    }else{
+      return(
+        <>
+          <div className="TopBar">
+            <Title />
+            <UserNav />
+          </div>
+            
+        </>)
+    }
+  }
+
   return (
     <>
       <Head>
@@ -49,10 +86,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-          <Title />
-          <User />
-          <UserNav />
-          <LogOut />
+          <TopBar />
       </main>
     </>
   )

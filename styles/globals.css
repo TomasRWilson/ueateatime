@@ -1,4 +1,3 @@
-
 body {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
@@ -36,19 +35,78 @@ form > button{
   margin-top: 25px;
   text-align: center;
   font-size: 30px;
-  border: none;
+  border-bottom: 2px solid lightgray;
+  border-top: none;
+  border-left: none;
+  border-right: none;
   background-color: white;
   color: #96d9ff;
   cursor: pointer;
-  font-weight: bold;
+  padding: 0 10px 10px 10px;
 }
 
 form > button:disabled{
-  color: lightgray;
+  color: #555;
+  cursor: default;
 }
 
 form.label {
   text-align: left;
+}
+
+.TopBar{
+  text-align: left;
+  background-color: #141936;
+  width: 100vw;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  margin: -10px;
+}
+
+.TopBar > li{
+  display: inline-block;
+}
+
+.Title{
+  font-weight: bold;
+  color: white;
+  margin: 0 40px;
+}
+
+.LogSign{
+  list-style-type: none;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 30px;
+}
+
+.LogSign > li{
+  display: inline-block;
+}
+
+.UserLogout{
+  list-style-type: none;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 30px;
+}
+
+.UserLogout > li{
+  display: inline-block;
+}
+
+.LogOut{
+  margin-top: 25px;
+  text-align: center;
+  font-size: 25px;
+  border: none;
+  background-color: #141936;
+  color: white;
+  cursor: pointer;
+  padding: 0 10px 10px 10px;
 }
 
 .form-warning {
@@ -58,4 +116,8 @@ form.label {
   position: absolute;
   padding: 0;
   margin: -20px 0 0 0;
+}
+
+.Username{
+  color: white;
 }

@@ -10,7 +10,9 @@ export default function Home() {
     const [resp, setResp] = useState();
     const [formData, setFormData] = useState({
         email: "",
-        password: ""
+        emailError: "",
+        password: "",
+        pass: false
     })
 
     const router = useRouter()
@@ -66,6 +68,37 @@ export default function Home() {
 
         }
     }
+
+    const handleValidation = (event) =>{
+        const emailVerif = /\S+@\S+\.\S+/;
+        if(event.target.name == "email"){
+            if(event.target.value.length > 0){
+                if(!emailVerif.test(event.target.value.trim())){
+                    if(formData.emailError != "Email must be valid"){
+                        setFormData({...formData, emailError: "Email must be valid"})
+                    }
+                }else{
+                    if(formData.emailError != ""){
+                        setFormData({...formData, emailError: ""})
+                    }
+                }
+            }else{
+                if(formData.emailError != ""){
+                    setFormData({...formData, emailError: ""})
+                }
+            }
+        }else if(event.target.name == "pass"){
+            if(event.target.value.length > 0 && formData.email.length > 0 && !formData.emailError){
+                if(!formData.pass){
+                    setFormData({...formData, pass: true})
+                }
+            }else{
+                if(formData.pass){
+                    setFormData({...formData, pass: false})
+                }
+            }
+        }
+    }
     //Form for login request
     return(
         <>
@@ -75,10 +108,11 @@ export default function Home() {
             <main>
                 <Link href='/' style={LinkStyle}>&lt; Back</Link>
                 <form onSubmit={handleSubmit}>
-                    <input id="email" name="email" placeholder="Email" type="email" onChange={(e) => setFormData({...formData, email: e.target.value})} value={formData.email}></input><br/>
-                    <input id="pass" name="pass" placeholder="Password" type="password" onChange={(e) => setFormData({...formData, password: e.target.value})} value={formData.password}></input><br/>
+                    <input id="email" name="email" placeholder="Email" type="email" onChange={(e) => setFormData({...formData, email: e.target.value})} value={formData.email} onKeyUp={handleValidation}></input><br/>
+                    <p className="form-warning">{formData.emailError}</p>
+                    <input id="pass" name="pass" placeholder="Password" type="password" onChange={(e) => setFormData({...formData, password: e.target.value})} value={formData.password} onKeyUp={handleValidation}></input><br/>
                     <Error ErrorCode = {resp}/>
-                    <button>Log In</button>
+                    <button disabled={!formData.pass}>Log In</button>
                 </form>
                 <Link href='/forgotpassword' style={FPStyle}>Forgotten Password?</Link>
             </main>

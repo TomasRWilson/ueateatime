@@ -70,8 +70,6 @@ export default function Home() {
     //Present form if token if valid
     const PassForm = ({pass}) => {
 
-        
-
         const handleChange = (event) => {
             setPassInfo({ ...passInfo, [event.target.name]: event.target.value});
         }
