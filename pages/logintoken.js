@@ -18,7 +18,7 @@ export default function Home() {
     .then((response) => {
         if(response.data != 205){
             //Log user in and send user to home if the token is valid
-            setUser(response.data)
+            setUser({username: response.data.username, user_id: response.data.user_id})
             router.push('/');
         }
         console.log(response)

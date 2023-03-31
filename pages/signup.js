@@ -7,18 +7,25 @@ import Link from 'next/link';
 
 export default function Home() {
     
-    const [resp, setResp] = React.useState();
+    const [resp, setResp] = useState();
+
+    const [errors, setErrors] = useState({
+        username: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        password: "",
+        passwordC: "",
+        clean: false
+    });
+
     const [formData, setFormData] = useState({
         username: "",
         firstname: "",
         lastname: "",
         email: "",
         password: "",
-        passwordError: "",
-        passwordC: "",
-        passwordCError: "",
-        emailError: true,
-        clean: false
+        passwordC: ""
     });
 
     const router = useRouter();
@@ -63,8 +70,101 @@ export default function Home() {
             setResp("");
         }
         }
-
+    
     const handleValidation = (event) => {
+        switch(event.target.name){
+            case "username":
+                if(event.target.value.length == 0){
+                    if(errors.passwordC.length > 1 && !errors.passwordC && errors.username != "Field cannot be empty"){
+                        setErrors({...errors, username: "Field cannot be empty"})
+                    }else{
+                        if(errors.username != ""){
+                            setErrors({...errors, username: ""})
+                        }
+                    }
+                }else{
+                    const userCheck = /^[A-Za-z0-9]+$/;
+                    if(!event.target.value.trim().match(userCheck)){
+                        if(errors.username != "Field must only contain alphanumeric characters"){
+                            setErrors({...errors, username: "Field must only contain alphanumeric characters"})
+                        }
+                    }else{
+                        if(errors.username != ""){
+                            setErrors({...errors, username: ""})
+                        }
+                    }
+                }
+                break;
+            case "firstname":
+                if(event.target.value.length == 0){
+                    if(errors.passwordC.length > 1 && !errors.passwordC && errors.firstname != "Field cannot be empty"){
+                        setErrors({...errors, firstname: "Field cannot be empty"})
+                    }else{
+                        if(errors.firstname != ""){
+                            setErrors({...errors, firstname: ""})
+                        }
+                    }
+                }else{
+                    const nameCheck = /^[A-Za-z]+$/;
+                    if(!event.target.value.trim().match(nameCheck)){
+                        if(errors.firstname != "Field must only contain letters"){
+                            setErrors({...errors, firstname: "Field must only contain letters"})
+                        }
+                    }else{
+                        if(errors.firstname != ""){
+                            setErrors({...errors, firstname: ""})
+                        }
+                    }
+                }
+                break;
+            case "lastname":
+                if(event.target.value.length == 0){
+                    if(errors.passwordC.length > 1 && !errors.passwordC && errors.lastname != "Field cannot be empty"){
+                        setErrors({...errors, lastname: "Field cannot be empty"})
+                    }else{
+                        if(errors.lastname != ""){
+                            setErrors({...errors, lastname: ""})
+                        }
+                    }
+                }else{
+                    const nameCheck = /^[A-Za-z]+$/;
+                    if(!event.target.value.trim().match(nameCheck)){
+                        if(errors.lastname != "Field must only contain letters"){
+                            setErrors({...errors, lastname: "Field must only contain letters"})
+                        }
+                    }else{
+                        if(errors.lastname != ""){
+                            setErrors({...errors, lastname: ""})
+                        }
+                    }
+                }
+                break;
+            case "email":
+                const emailVerif = /\S+@\S+\.\S+/;
+                if(event.target.value.length > 0){
+                    if(emailVerif.test(event.target.value)){
+                        if(errors.email != ""){
+                            setErrors({...errors, email: ""});
+                        }
+                    }else{
+                        if(errors.email != "Email must be valid"){
+                            setErrors({...errors, email: "Email must be valid"});
+                        }
+                    }
+                }else if(errors.passwordC.length > 1 && !errors.passwordC){
+                    if(errors.email != "Field cannot be empty"){
+                        setErrors({...errors, email: "Field cannot be empty"});
+                    }
+                }else{
+                    if(errors.email != ""){
+                        setErrors({...errors, email: ""});
+                    }
+                }
+                
+        }
+    }
+
+    const handlePasswordValidation = (event) => {
         event.preventDefault();
         const passwordInputValue = event.target.value.trim();
         const passwordType = event.target.name;
@@ -94,29 +194,29 @@ export default function Home() {
             }else{
                 errMsg = "";
             }
-            setFormData({...formData, passwordError: errMsg});
+            setErrors({...errors, password: errMsg});
             }
         // for confirm password
         if(passwordType === "passwordC" || (passwordType === "password" && formData.passwordC.length > 0) ){
                 
             if(formData.passwordC !== formData.password)
             {
-                setFormData({...formData, passwordCError: "Passwords do not match", clean: false});
+                setErrors({...errors, passwordC: "Passwords do not match", clean: false});
             }else{
-                setFormData({...formData, passwordCError: ""});
+                setErrors({...errors, passwordC: ""});
             }
             
         }
     }
 
     function isClean(){
-        if(formData.username && formData.firstname && formData.lastname && formData.email && formData.password == formData.passwordC && !formData.passwordError && !formData.passwordCError && !formData.emailError){
-            if(!formData.clean){
-                setFormData({...formData, clean: true});
+        if(formData.username && formData.firstname && formData.lastname && formData.email && formData.password == formData.passwordC && !errors.password && !errors.passwordC && !errors.email){
+            if(!errors.clean){
+                setErrors({...errors, clean: true});
             }
         }else{
-            if(formData.clean){
-                setFormData({...formData, clean: false});
+            if(errors.clean){
+                setErrors({...errors, clean: false});
             }
         }
     }
@@ -133,43 +233,8 @@ export default function Home() {
         }
     };
 
-    function PasswordError(){
-        return(
-            <p className="form-warning">{formData.passwordError}</p>
-        )
-    }
-
-    function PasswordCError(){
-        return(
-            <p className="form-warning">{formData.passwordCError}</p>
-        )
-    }
-
-    function EmptyError(Obj){
-        let msg = "";
-        if(formData.passwordC.length > 1 && !formData.passwordCError){
-            if(Obj.Obj == ""){
-                msg = "Field cannot be empty";
-            }
-        }
+    function DisplayError({msg}){
         return(<p className="form-warning">{msg}</p>)
-    }
-
-    function EmailError(){
-        const emailVerif = /\S+@\S+\.\S+/;
-        if(formData.email.length > 0 && !emailVerif.test(formData.email)){
-            if(formData.emailError != "Email must be valid"){
-                setFormData({...formData, emailError: "Email must be valid"});
-            }
-        }else if(formData.passwordC.length > 1 && !formData.passwordCError){
-            if(formData.email == "" && formData.emailError != "Field cannot be empty"){
-                setFormData({...formData, emailError: "Field cannot be empty"});
-            }else{
-                if(emailVerif.test(formData.email) && formData.emailError != ""){
-                    setFormData({...formData, emailError: ""});
-                }
-        }
-        }
     }
 
     isClean();
@@ -181,22 +246,21 @@ export default function Home() {
             </Head>
             <Link href='/' style={LinkStyle}>&lt; Back</Link>
             <form onSubmit={handleSubmit}>
-                <input id="usern" name="username" placeholder="Username" type="text" onChange={handleChange} value={formData.username}/>
-                <EmptyError Obj={formData.username} />
+                <input id="usern" name="username" placeholder="Username" type="text" onChange={handleChange} onKeyUp={handleValidation} value={formData.username}/>
+                <DisplayError msg={errors.username} />
                 <ErrorUser ErrorCode={resp}/>
-                <input id="firstn" name="firstname" placeholder="First Name" type="text" onChange={handleChange} value={formData.firstname}/>
-                <EmptyError Obj={formData.firstname} />
-                <input id="lastn" name="lastname" placeholder="Last Name" type="text" onChange={handleChange} value={formData.lastname}/>
-                <EmailError />
-                <EmptyError Obj={formData.lastname} />
-                <input id="email" name="email" placeholder="Email" type="email" onChange={handleChange} value={formData.email}/>
-                <p className="form-warning">{formData.emailError}</p>
+                <input id="firstn" name="firstname" placeholder="First Name" type="text" onChange={handleChange} onKeyUp={handleValidation} value={formData.firstname}/>
+                <DisplayError msg={errors.firstname} />
+                <input id="lastn" name="lastname" placeholder="Last Name" type="text" onChange={handleChange} onKeyUp={handleValidation} value={formData.lastname}/>
+                <DisplayError msg={errors.lastname} />
+                <input id="email" name="email" placeholder="Email" type="email" onChange={handleChange} onKeyUp={handleValidation} value={formData.email}/>
+                <DisplayError msg={errors.email} />
                 <ErrorEmail ErrorCode={resp}/>
-                <input id = "pass" type="password" value={formData.password}  onChange={handleChange} onKeyUp={handleValidation} name="password" placeholder="Password"/>
-                <PasswordError />
-                <input type="password" value={formData.passwordC}  onChange={handleChange} onKeyUp={handleValidation} name="passwordC" placeholder="Confirm Password"/>
-                <PasswordCError />
-                <button type="submit" disabled={!formData.clean}>Sign Up</button>
+                <input id ="pass" type="password" value={formData.password}  onChange={handleChange} onKeyUp={handlePasswordValidation} name="password" placeholder="Password"/>
+                <DisplayError msg={errors.password} />
+                <input type="password" value={formData.passwordC}  onChange={handleChange} onKeyUp={handlePasswordValidation} name="passwordC" placeholder="Confirm Password"/>
+                <DisplayError msg={errors.passwordC} />
+                <button type="submit" disabled={!errors.clean}>Sign Up</button>
             </form>
         </>
     )
