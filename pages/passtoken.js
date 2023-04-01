@@ -11,8 +11,15 @@ export default function Home() {
     const [resp, setResp] = useState("");
     const [user_id, setUser_Id] = useState("");
     const [passed, setPassed] = useState(false);
-    const [temp, setTemp] = useState("");
-    const [passInfo, setPassInfo] = useState("");
+    const [errors, setErrors] = useState({
+        password: "",
+        passwordC: "",
+        clean: false
+    })
+    const [formData, setFormData] = useState({
+        password: "",
+        passwordC: ""
+    });
 
     //Read token from URL paramter
     const router = useRouter();
@@ -35,7 +42,7 @@ export default function Home() {
     
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setPassInfo({password: ""});
+        setFormData({password: "", passwordC: ""});
         //Construct data and hash and salt password before it is sent to db
         const data = {
             token: token,
@@ -55,6 +62,56 @@ export default function Home() {
         .catch((e) => { console.log(e)}
         )}
 
+    const handlePasswordValidation = (event) => {
+        event.preventDefault();
+        const passwordInputValue = event.target.value.trim();
+        const passwordType = event.target.name;
+        //for password
+        if(passwordType === 'password'){
+
+            const upperCheck = /(?=.*?[A-Z])/.test(passwordInputValue);
+            const lowerCheck = /(?=.*?[a-z])/.test(passwordInputValue);
+            const numberCheck = /(?=.*?[0-9])/.test(passwordInputValue);
+            const specialCheck = /(?=.*?[#?!@$%^&*-])/.test(passwordInputValue);
+            const lengthCheck = /.{8,}/.test(passwordInputValue);
+
+
+            let errMsg = "";
+            if(passwordInputValue.length === 0){
+                errMsg = "";
+            }else if(!upperCheck){
+                errMsg = "Password must contain at least one uppercase character";
+            }else if(!lowerCheck){
+                errMsg = "Password must contain at least one lowercase character";
+            }else if(!numberCheck){
+                errMsg = "Password must contain at least one number";
+            }else if(!specialCheck){
+                errMsg = "Password must contain at least one special character";
+            }else if(!lengthCheck){
+                errMsg = "Password must contain at least minumum 8 characters";
+            }else{
+                errMsg = "";
+            }
+            setErrors({...errors, password: errMsg});
+        }
+        // for confirm password
+        if(passwordType === "passwordC" || (passwordType === "password" && formData.passwordC.length > 0) ){
+
+            if(formData.passwordC !== formData.password)
+            {
+                setErrors({...errors, passwordC: "Passwords do not match", clean: false});
+            }else{
+                setErrors({...errors, passwordC: "", clean: true});
+            }
+
+        }
+    }
+
+    const handleChange = (event) => {
+        event.preventDefault();
+        setFormData({...formData, [event.target.name]:event.target.value.trim()});
+    }
+
     //Display message if the token has expired or is not recognised
     const Token = ({ErrorCode}) => {
         if(ErrorCode == 205){
@@ -67,19 +124,23 @@ export default function Home() {
             )
         }
     }
+
+    function DisplayError({msg}){
+        return(<p className="form-warning">{msg}</p>)
+    }
+
     //Present form if token if valid
     const PassForm = ({pass}) => {
-
-        const handleChange = (event) => {
-            setPassInfo({ ...passInfo, [event.target.name]: event.target.value});
-        }
 
         if (pass){
             return(
                 <>
                     <form onSubmit={handleSubmit}>
-                        <input id="pass" name="pass" placeholder="New Password" type="password" value={passInfo} onChange={(e) => setPassInfo(e.target.value)}></input><br/>
-                        <button type="submit">Change Password</button>
+                        <input id ="pass" type="password" value={formData.password}  onChange={handleChange} onKeyUp={handlePasswordValidation} name="password" placeholder="Password"/>
+                        <DisplayError msg={errors.password} />
+                        <input type="password" value={formData.passwordC}  onChange={handleChange} onKeyUp={handlePasswordValidation} name="passwordC" placeholder="Confirm Password"/>
+                        <DisplayError msg={errors.passwordC} />
+                        <button type="submit" display={errors.clean}>Change Password</button>
                     </form>
                 </>
             )

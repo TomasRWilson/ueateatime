@@ -14,9 +14,9 @@ export default async (req, res) => {
         //Create expiry time for 10 mins from now for when token expires
         var expiry = new Date();
         expiry.setMinutes(expiry.getMinutes() + 10);
-        const values = [req.body.email, req.body.username, req.body.firstname, req.body.lastname, req.body.email, req.body.password, token, expiry]
+        const values = [req.body.username, req.body.firstname, req.body.lastname, req.body.email, req.body.password, token, expiry]
         //Add new user to db
-        const result = await conn.query('INSERT INTO users (user_id, username, firstname, lastname, email, password, token, expiry) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', values);
+        const result = await conn.query('INSERT INTO users (username, firstname, lastname, email, password, token, expiry) VALUES ($1, $2, $3, $4, $5, $6, $7)', values);
         console.log(result);
         //Construct email information
         const data = {

@@ -18,10 +18,6 @@ export default function Home() {
       margin: "0 10px",
   }
 
-  function User() { 
-    return <h2 className="Username">{user.username}</h2>;
-  }
-
   function UserNav() {
     return(
       <>
@@ -45,7 +41,7 @@ export default function Home() {
 
   function LogOut(){
       function handleClick() {
-          setUser(null)
+          setUser({username: "", user_id: ""})
       }
 
       return(
@@ -58,7 +54,7 @@ export default function Home() {
   }
 
   function TopBar(){
-    if(user){
+    if(user.username){
       return(
         <>
           <div className="TopBar">
