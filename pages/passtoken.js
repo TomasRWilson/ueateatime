@@ -140,7 +140,7 @@ export default function Home() {
                         <DisplayError msg={errors.password} />
                         <input type="password" value={formData.passwordC}  onChange={handleChange} onKeyUp={handlePasswordValidation} name="passwordC" placeholder="Confirm Password"/>
                         <DisplayError msg={errors.passwordC} />
-                        <button type="submit" display={errors.clean}>Change Password</button>
+                        <button type="submit" disabled={errors.clean}>Change Password</button>
                     </form>
                 </>
             )
